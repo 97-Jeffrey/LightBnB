@@ -19,19 +19,26 @@ const pool = new Pool({
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithEmail = function(email) {
-  let user;
-  for (const userId in users) {
-    user = users[userId];
-    if (user.email.toLowerCase() === email.toLowerCase()) {
-      break;
-    } else {
-      user = null;
-    }
-  }
-  return Promise.resolve(user);
-}
+  return pool.query(`
+  SELECT * FROM users
+  WHERE email = $1;
+  `,[email])
+  .then(res => res.rows[0]);
+};
 exports.getUserWithEmail = getUserWithEmail;
+// let user;
+//   for (const userId in users) {
+//     user = users[userId];
+//     if (user.email.toLowerCase() === email.toLowerCase()) {
+//       break;
+//     } else {
+//       user = null;
+//     }
+//   }
+// return Promise.resolve(user);
 
+//$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDR
+//tristanjacobs@gmail.com 
 /**
  * Get a single user from the database given their id.
  * @param {string} id The id of the user.
@@ -88,7 +95,7 @@ const getAllProperties = function(options, limit = 10) {
 }
 exports.getAllProperties = getAllProperties;
 
-
+ 
 /**
  * Add a property to the database
  * @param {{}} property An object containing all of the property details.
